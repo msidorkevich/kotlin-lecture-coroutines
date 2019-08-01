@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import sidomik.kotlin.lecture.coroutines.futures.createCollage
 import java.net.URL
 
-fun downloadImages(url: URL) {
+fun createCollage(url: URL) {
     val acc = emptyArray<Byte>()
 
     runBlocking {
@@ -19,15 +19,17 @@ fun downloadImages(url: URL) {
     }
 }
 
-suspend fun downloadImagesWithRetry(url: URL) {
+fun createCollageWithRetry(url: URL) {
     val acc = emptyArray<Byte>()
 
-    val html = retry({ downloadHtml(url) }, 5)
-    val imageUrls = retry({ parseHtml(html) }, 5)
+    runBlocking {
+        val html = retry({ downloadHtml(url) }, 5)
+        val imageUrls = retry({ parseHtml(html) }, 5)
 
-    imageUrls.forEach { imageUrl ->
-        val image = retry({ downloadImage(imageUrl) }, 5)
-        createCollage(acc, image)
+        imageUrls.forEach { imageUrl ->
+            val image = retry({ downloadImage(imageUrl) }, 5)
+            createCollage(acc, image)
+        }
     }
 }
 

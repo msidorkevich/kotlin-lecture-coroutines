@@ -3,7 +3,7 @@ package sidomik.kotlin.lecture.coroutines.sync
 import java.lang.Thread.sleep
 import java.net.URL
 
-fun downloadImages(url: URL) {
+fun createCollage(url: URL) {
     val acc = emptyArray<Byte>()
 
     val html = downloadHtml(url)
@@ -15,7 +15,7 @@ fun downloadImages(url: URL) {
     }
 }
 
-fun downloadImagesWithRetry(url: URL) {
+fun createCollageWithRetry(url: URL) {
     val acc = emptyArray<Byte>()
 
     val html = retry({ downloadHtml(url) }, 5)

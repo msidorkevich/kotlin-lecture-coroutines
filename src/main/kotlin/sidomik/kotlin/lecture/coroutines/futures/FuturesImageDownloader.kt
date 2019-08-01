@@ -31,7 +31,7 @@ fun createCollage(url: URL): Array<Byte> {
     return acc
 }
 
-fun downloadImagesInlined(url: URL): Array<Byte> {
+fun createCollageInlined(url: URL): Array<Byte> {
     val acc = emptyArray<Byte>()
     val allTasks = mutableListOf<CompletableFuture<Void>>()
     downloadHtml(url)
@@ -48,7 +48,24 @@ fun downloadImagesInlined(url: URL): Array<Byte> {
     return acc
 }
 
-fun downloadImagesWithRetry(url: URL): Array<Byte> {
+fun createCollageWithJoin(url: URL): Array<Byte> {
+    val acc = emptyArray<Byte>()
+    val allTasks = mutableListOf<CompletableFuture<Void>>()
+    downloadHtml(url)
+            .thenApplyAsync { parseHtml(it) }
+            .thenAcceptAsync { urls ->
+                urls.forEach { imageUrl ->
+                    downloadImage(imageUrl).thenAcceptAsync { image ->
+                        createCollage(acc, image)
+                    }
+                }
+            }.join()
+    CompletableFuture.allOf(*allTasks.toTypedArray()).join()
+
+    return acc
+}
+
+fun createCollageWithRetry(url: URL): Array<Byte> {
     val acc = emptyArray<Byte>()
     val allTasks = mutableListOf<CompletableFuture<Void>>()
     doWithRetry({ downloadHtml(url) }, 5)
@@ -60,7 +77,7 @@ fun downloadImagesWithRetry(url: URL): Array<Byte> {
                         doWithRetry({ createCollage(acc, image) }, 5)
                     }
             }
-        }
+        }.join()
     CompletableFuture.allOf(*allTasks.toTypedArray()).join()
 
     return acc
