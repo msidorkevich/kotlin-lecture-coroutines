@@ -1,0 +1,40 @@
+Slide 1
+
+Why we need coroutines
+1. Code simplification
+2. Thread effective usage
+
+Slide 2
+
+Thread | Coroutine
+
+high memory | low memory
+can be only blocked | can be suspended
+
+Slide 3
+
+Normal Code | Suspension point
+            | Coroutine scope or suspended function
+
+Slide 4
+
+Code simplification
+
+Coroutines | Futures | Callbacks
+simple imperative code | monadic values | big ball of mud
+Remove callback hell
+
+Slide 5
+
+Example with caching
+
+Slide N
+
+How structured concurrency changes the way of thinking
+Structured concurrency in other langs
+Java - example with Fibers
+No shared mutable state, because state is inside the coroutine
+
+
+Resources:
+KotlinConf 2018 - Kotlin Coroutines in Practice by Roman Elizarov - https://www.youtube.com/watch?v=a3agLJQ6vt8
